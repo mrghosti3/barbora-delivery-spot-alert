@@ -174,10 +174,12 @@ def magic(headers_path):
 
 def create_argument_parser():
     argument_parser = argparse.ArgumentParser(description="This is magic script")
-    argument_parser.add_argument(
-        "command", choices=["parse_har", "alarm", "parse_headers"]
+    argument_parser.add_argument("--har-parse", metavar="<har_path>",
+        help="Parses '.har' file and outputs into '.json'"
     )
-    argument_parser.add_argument("path")
+    argument_parser.add_argument("-t", "--header-parse", metavar="<header_path>",
+        help="Parses '.txt' file and outputs into '.json'"
+    )
     argument_parser.add_argument("-v", "--verbose", action="store_true")
     return argument_parser
 
@@ -202,13 +204,17 @@ if __name__ == "__main__":
     argument_parser = create_argument_parser()
     arguments = argument_parser.parse_args()
     logger = create_logger(arguments.verbose)
-    path = arguments.path
-    if arguments.command == "parse_har":
-        har_path = path
-        parse_har(har_path)
-    elif arguments.command == "parse_headers":
-        headers_path = path
-        parse_headers(headers_path)
-    elif arguments.command == "alarm":
-        headers_path = path
-        scrape_and_alarm(headers_path)
+
+    path = ""
+    if arguments.har_parse:
+        path = arguments.har_parse
+        parse_har(path)
+    elif arguments.header_parse:
+        path = arguments.header_parse
+        parse_headers(path)
+    else:
+        logger.info("Input file not specified")
+        exit()
+
+    path = path + ".json"
+    scrape_and_alarm(path)
