@@ -55,9 +55,17 @@ Enable termux wakelock in notification bar
 
 ### Running
 
-Run it terminal
+Run it terminal:
 ```sh
 python main.py parseHeader header.txt
+```
+
+It extracts header data into header.txt.json and checks for available slots.
+
+If extracted header.json already exists, then run it as:
+
+```sh
+python main.py alarm header.json
 ```
 
 Everytime script finds a slot it text or beep.
