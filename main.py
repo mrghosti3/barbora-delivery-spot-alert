@@ -177,20 +177,18 @@ def magic(headers_path):
 
 def create_argument_parser():
     argument_parser = argparse.ArgumentParser(description="This is magic script")
-    argument_parser.add_argument("--har-parse", metavar="<har_path>",
-        help="Parses '.har' file and outputs into '.json'"
+    argument_parser.add_argument(
+        "command", choices=["parse-har", "parse-headers", "alarm"],
+        help="Reads input file based on command"
     )
-    argument_parser.add_argument("-t", "--header-parse", metavar="<header_path>",
-        help="Parses '.txt' file and outputs into '.json'"
-    )
-    argument_parser.add_argument("-a", "--alarm", metavar="<parsed_header_path>",
-        help="Skips header parsing and reads existing '.json' header file"
+    argument_parser.add_argument("path",
+        help="Path to input file with header data"
     )
     argument_parser.add_argument("-o", "--run-once", action="store_true",
-        help="Scrapes for available spots ONCE"
+        help="Run check up ONCE"
     )
     argument_parser.add_argument("-v", "--verbose", action="store_true",
-        help="Prints out more logs in terminal"
+        help="Verbose logging"
     )
     return argument_parser
 
@@ -216,18 +214,12 @@ if __name__ == "__main__":
     arguments = argument_parser.parse_args()
     logger = create_logger(arguments.verbose)
 
-    if arguments.har_parse:
-        path = arguments.har_parse
+    path = arguments.path
+    if arguments.command == "parse-har":
         parse_har(path)
-    elif arguments.header_parse:
-        path = arguments.header_parse
-        parse_headers(path)
-    elif arguments.alarm:
-        path = arguments.alarm
-    else:
-        logger.info("Input file not specified")
-        exit()
-
-    if "json" not in path:
         path = path + ".json"
+    elif arguments.command == "parse-header":
+        parse_headers(path)
+        path = path + ".json"
+
     scrape_and_alarm(path, arguments.run_once)
