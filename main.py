@@ -30,7 +30,7 @@ LOG_LEVEL = "INFO"
 barbora_deliveries_url = "https://www.barbora.lt/api/eshop/v1/cart/deliveries"
 
 
-def scrape_and_alarm(headers_path):
+def scrape_and_alarm(headers_path, run_once):
     headers = {}
     with open(headers_path) as f:
         try:
@@ -107,6 +107,9 @@ def scrape_and_alarm(headers_path):
             len(slots["not_available"]),
         )
 
+        if run_once:
+            break
+
         time.sleep(random.randint(*SLEEP_RANGE))
 
 
@@ -180,7 +183,15 @@ def create_argument_parser():
     argument_parser.add_argument("-t", "--header-parse", metavar="<header_path>",
         help="Parses '.txt' file and outputs into '.json'"
     )
-    argument_parser.add_argument("-v", "--verbose", action="store_true")
+    argument_parser.add_argument("-a", "--alarm", metavar="<parsed_header_path>",
+        help="Skips header parsing and reads existing '.json' header file"
+    )
+    argument_parser.add_argument("-o", "--run-once", action="store_true",
+        help="Scrapes for available spots ONCE"
+    )
+    argument_parser.add_argument("-v", "--verbose", action="store_true",
+        help="Prints out more logs in terminal"
+    )
     return argument_parser
 
 
@@ -205,16 +216,18 @@ if __name__ == "__main__":
     arguments = argument_parser.parse_args()
     logger = create_logger(arguments.verbose)
 
-    path = ""
     if arguments.har_parse:
         path = arguments.har_parse
         parse_har(path)
     elif arguments.header_parse:
         path = arguments.header_parse
         parse_headers(path)
+    elif arguments.alarm:
+        path = arguments.alarm
     else:
         logger.info("Input file not specified")
         exit()
 
-    path = path + ".json"
-    scrape_and_alarm(path)
+    if "json" not in path:
+        path = path + ".json"
+    scrape_and_alarm(path, arguments.run_once)
