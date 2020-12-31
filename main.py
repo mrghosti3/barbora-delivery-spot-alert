@@ -178,7 +178,7 @@ def magic(headers_path):
 def create_argument_parser():
     argument_parser = argparse.ArgumentParser(description="This is magic script")
     argument_parser.add_argument(
-        "command", choices=["parse-har", "parse-headers", "alarm"],
+        "command", choices=["parse-har", "parse-header", "alarm"],
         help="Reads input file based on command"
     )
     argument_parser.add_argument("path",
