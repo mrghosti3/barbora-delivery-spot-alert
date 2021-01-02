@@ -57,7 +57,7 @@ Enable termux wakelock in notification bar
 
 Run it terminal:
 ```sh
-python main.py parseHeader header.txt
+python main.py parse-header header.txt
 ```
 
 It extracts header data into header.txt.json and checks for available slots.
@@ -74,7 +74,7 @@ Everytime script finds a slot it text or beep.
 
 | Argument | Alias | Value | Description |
 | :------: | :---: | :---: | :---------: |
-| command | - | { parseHar, parseHeader, alarm } | Reads input file based on command.<br>"parseHar" for parsing har file.<br>"parseHeader" for txt file with header.<br>"alarm" uses already parsed header. |
+| command | - | { parse-har, parse-header, alarm } | Reads input file based on command.<br>"parse-har" for parsing har file.<br>"parse-header" for txt file with header.<br>"alarm" uses already parsed header. |
 | path | - | - | Path to input file with header data |
 | --run-once | -o | - | Run check up ONCE |
 | --verbose | -v | - | Verbose logging |
